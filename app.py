@@ -6,11 +6,25 @@ root.geometry('500x500')
 
 frm = ttk.Frame(root, padding=0)
 frm.grid()
+n = StringVar()
+n.set('Premier League')
+def checkcombobox(index, value, op):
+    print(test2)
+    
 
-ttk.Label(frm, text='test').grid(column=0, row=0)
-ttk.Button(frm,text='test2').grid(column=3, row=0)
-Combobox['values'] = ('valeur1','valeur2','valeur3')
 
-ttk.Combobox(frm,textvariable=Combobox).grid(column=2, row=0)
+n.trace('w', checkcombobox)
+cmb = ttk.Combobox(frm,textvariable=n, values=['Premier League','Liga','Ligue 1','Serie A','Liga Nos'],justify='center',).grid(column=2, row=0)
+print(cmb)
+test2 = n.get()
+
+
+
+
+
+
+
+
+
 
 root.mainloop()
