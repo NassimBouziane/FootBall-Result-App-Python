@@ -26,6 +26,7 @@ Leagues= ('Premier League','Liga','Ligue 1','Serie A','Liga Nos')
 # Function to print the index of selected option in Combobox
 def callback(*arg):
    label['text'] = 'Result of '+var.get()
+   
 
    #https://v3.football.api-sports.io/leagues to get leagues
 
@@ -34,10 +35,12 @@ def callback(*arg):
    #print(r.json()['response'][0]['league']['standings'][0][0])
    standing = r.json()['response'][0]['league']['standings'][0] # from standing retrieve rank, team name, ponts, goaldiff form, description played win draw lose
    for i in range(20):
-      label2 =  Label(frm,text=str(standing[i]['rank'])+' '+ standing[i]['team']['name'] +' ' + str(standing[i]['points']) + ' ' + str(standing[i]['goalsDiff'])  
+      #j = i + 1 a tester demain 
+      label2 = Label(frm,text=str(standing[i]['rank'])+' '+ standing[i]['team']['name'] +' ' + str(standing[i]['points']) + ' ' + str(standing[i]['goalsDiff'])  
       + ' ' + standing[i]['form']+ ' ' + str(standing[i]['description'])+ ' ' + str(standing[i]['all']['played'])+ ' ' + str(standing[i]['all']['win'])
       + ' ' + str(standing[i]['all']['draw'])+ ' ' + str(standing[i]['all']['lose']))
       label2.pack()
+   
    
 # Create a combobox widget
 var = StringVar() # the var we are tracing 
@@ -51,7 +54,7 @@ cb['values']= Leagues
 cb['state']= 'readonly'
 cb.pack(fill='x',padx= 5, pady=5)
 
-label = Label(frm,text='Result of '+var.get())
+label = Label(frm, text='Result of '+var.get())
 label.pack()
 
 cbYear = ttk.Combobox(frm,textvariable=varYears)
