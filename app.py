@@ -3,7 +3,6 @@ from tkinter import ttk
 import requests
 from dotenv import dotenv_values
 import datetime
-import pandas as pd
 
 
 root = Tk()
@@ -13,11 +12,11 @@ root.geometry('500x500')
 
 
 year = datetime.datetime.today().year - 1
-lst_Years = list(range(year, year - 20, -1)) # Getting a list of year from todays year to 20years ago
-print(lst_Years)
+lst_Years = list(range(year, year - 13, -1)) # Getting a list of year from todays year to 13years ago
 
-config = dotenv_values('.env')
-print(config['API_KEY'])
+
+config = dotenv_values('.env') # getting api key from .env
+
 
 frm = ttk.Frame(root, padding=0)
 frm.pack()
@@ -27,33 +26,47 @@ Leagues= ('Premier League','Liga','Ligue 1','Serie A','Liga Nos')
 
 # Function to print the index of selected option in Combobox
 def callback(*arg):
-   label['text'] = 'Result of '+var.get()
-
-   
+   label['text'] = 'Result of '+var.get() 
 
    #https://v3.football.api-sports.io/leagues to get leagues
+   league = 0
+   if var.get() == 'Premier League':
+    league = 39
+   elif var.get() == 'Liga':
+        league = 140
+   elif var.get() == 'Ligue 1':
+        league = 61
+   elif var.get() == 'Liga Nos':
+        league = 94
+   elif var.get() == 'Serie A':
+        league = 135
+
+   if league == 94:
+    if(int(varYears.get()) >= 2014):
+        len = 18
+    elif int(varYears.get()) < 2014:
+        len = 16
+   elif league != 94:
+    len = 20               
 
    headers = {'x-rapidapi-key': config['API_KEY'] }
-   #r = requests.get('https://v3.football.api-sports.io/standings?season='+varYears.get()+'&league=39',headers=headers)
-   #print(r.json()['response'][0]['league']['standings'][0][0])
-   #standing = r.json()['response'][0]['league']['standings'][0] # from standing retrieve rank, team name, ponts, goaldiff form, description played win draw lose
-   test = []
-   for i in range(20):
-      #j = i + 1 a tester demain 
-      # label2 = Label(frm,text=str(standing[i]['rank'])+' '+ standing[i]['team']['name'] +' ' + str(standing[i]['points']) + ' ' + str(standing[i]['goalsDiff'])  
-      # + ' ' + standing[i]['form']+ ' ' + str(standing[i]['description'])+ ' ' + str(standing[i]['all']['played'])+ ' ' + str(standing[i]['all']['win'])
-      # + ' ' + str(standing[i]['all']['draw'])+ ' ' + str(standing[i]['all']['lose']))
-      # label2.pack()
-      
-      test.append('c\'est le '+str(i)+'eme label'+str(varYears.get())+'\n')
+   r = requests.get('https://v3.football.api-sports.io/standings?season='+varYears.get()+'&league='+str(league),headers=headers)
+   standing = r.json()['response'][0]['league']['standings'][0] # from standing retrieve rank, team name, ponts, goaldiff form, description played win draw lose
+   list = []
+
+   for i in range(len):
+      list.append(str(standing[i]['rank'])+' '+ standing[i]['team']['name'] +' ' + str(standing[i]['points']) + ' ' + str(standing[i]['goalsDiff'])  
+      + ' ' + standing[i]['form']+ ' ' + str(standing[i]['description'])+ ' ' + str(standing[i]['all']['played'])+ ' ' + str(standing[i]['all']['win'])
+      + ' ' + str(standing[i]['all']['draw'])+ ' ' + str(standing[i]['all']['lose']))
 
 
-   labelStanding['text'] = "\n.".join(test)
+   labelStanding['text'] = "\n.".join(list)
    labelStanding['font'] = ('Times'),13
    labelStanding['borderwidth'] = '2'
    labelStanding['relief'] = 'solid'
+   labelStanding['justify'] ='left'
    
-         
+#Canvas :   
 canvas = Canvas(root)
 scrollbar = ttk.Scrollbar(root, orient="vertical", command=canvas.yview)
 scrollable_frame = ttk.Frame(canvas)
